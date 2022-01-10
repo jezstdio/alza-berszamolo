@@ -15,7 +15,7 @@ function limitMaxScore(currentScore, maxScore) {
 function showGross() {
     const sum = document.getElementById("sum");
     
-    sum.innerHTML = Math.round(defaultGross + service() + iron() + activity() + nps()).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " Ft (brutto)";
+    sum.innerHTML = Math.round(defaultGross + service() + iron() + activity() + nps()).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " Ft";
 }
 
 function czkToHuf(czk) {
