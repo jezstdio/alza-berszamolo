@@ -5,9 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bérszámoló</title>
+    <link rel="stylesheet" href="8px-css-grid.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="flex center-start column padding-y-64 padding-x-24">
+    <div class="flex column center-start text-center max-width width-100">
+        <label class="flex center column margin-b-32 width-100">
+            Szolgáltatás
+            <input class="text-center margin-t-4" id="service" type="text" pattern="[0-9]*" inputmode="numeric">
+        </label>
+        <label class="flex center column margin-b-32 width-100">
+            Vas
+            <input class="text-center margin-t-4" id="iron" type="text" pattern="[0-9]*" inputmode="numeric">
+        </label>
+        <label class="flex center column margin-b-32 width-100">
+            Aktivity
+            <input class="text-center margin-t-4" id="activity" type="text" pattern="[0-9]*" inputmode="numeric">
+        </label>
+        <label class="flex center column margin-b-32 width-100">
+            NPS
+            <input class="text-center margin-t-4" id="nps" type="text" pattern="[0-9]*" inputmode="decimal">
+        </label>
+    </div>
+    <div class="fixed--m bottom-0--m left-0--m right-0--m margin-t-64--d flex column center text-center background-color-white padding-32">
+        <span>Végösszeg</span>
+        <div id="sum" class="text-center font-weight-bold font-size-32"></div>
+    </div>
     <script src="scripts.js"></script>
 </body>
 </html>

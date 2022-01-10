@@ -1,3 +1,9 @@
+const serviceInput = document.getElementById("service");
+const ironInput = document.getElementById("iron");
+const activityInput = document.getElementById("activity");
+const npsInput = document.getElementById("nps");
+const defaultGross = 265000;
+
 function limitMaxScore(currentScore, maxScore) {
     if (currentScore > maxScore) {
         return currentScore -= currentScore - maxScore;
@@ -7,14 +13,14 @@ function limitMaxScore(currentScore, maxScore) {
 }
 
 function service() {
-    const value = window.prompt("Szolgáltatások forintban (brutto)");
+    const value = serviceInput.value;
     const variable = 13.5;
 
     return value / 100 * variable;
 }
 
 function iron() {
-    const value = window.prompt("Vas forintban (brutto)");
+    const value = ironInput.value;
     const variable = 3.2;
 
     return value / 100 * variable;
@@ -25,7 +31,7 @@ function activity() {
     const maxScore = targetScore * 2;
     const gross = 14625;
     const variable = 39;
-    let currentScore = limitMaxScore(window.prompt("Aktivity pontszám"), maxScore);
+    let currentScore = limitMaxScore(activityInput.value, maxScore);
 
     return ((currentScore - targetScore) * variable) + gross;
 }
@@ -35,13 +41,21 @@ function nps() {
     const maxScore = 4.76;
     const gross = 13000;
     const variable = 100;
-    let currentScore = limitMaxScore(window.prompt("NPS pontszám"), maxScore);
+    let currentScore = limitMaxScore(npsInput.value.replace(",", "."), maxScore);
 
     return (Math.round((currentScore - targetScore) * 100) * variable) + gross;
 }
 
-document.write(Math.round(265000 + service() + iron() + activity() + nps()).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " Ft (brutto)");
+function showGross() {
+    const sum = document.getElementById("sum");
+    
+    sum.innerHTML = Math.round(defaultGross + service() + iron() + activity() + nps()).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " Ft (brutto)";
+}
 
-// Make inputs instead of prompts.
+serviceInput.onkeyup = showGross;
+ironInput.onkeyup = showGross;
+activityInput.onkeyup = showGross;
+npsInput.onkeyup = showGross;
+
 // CZK to HUF converter.
 // Gross to net converter.

@@ -1,4 +1,12 @@
-body {
-    font-size: 24px;
-    font-weight: bold;
+input {
+  background-color: #E3E3E3;
+  border-radius: 32px;
+  height: 48px;
+  max-width: 240px;
+  width: 100%;
 }
+
+.background-color-white {
+  background-color: #ffffff;
+}
+/*# sourceMappingURL=style.css.map */
