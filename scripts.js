@@ -7,14 +7,14 @@ function limitMaxScore(currentScore, maxScore) {
 }
 
 function service() {
-    const value = window.prompt("Szolgáltatások forintban");
+    const value = window.prompt("Szolgáltatások forintban (brutto)");
     const variable = 13.5;
 
     return value / 100 * variable;
 }
 
 function iron() {
-    const value = window.prompt("Vas forintban");
+    const value = window.prompt("Vas forintban (brutto)");
     const variable = 3.2;
 
     return value / 100 * variable;
@@ -40,9 +40,8 @@ function nps() {
     return (Math.round((currentScore - targetScore) * 100) * variable) + gross;
 }
 
-document.write(Math.round(265000 + service() + iron() + activity() + nps()).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " Ft");
+document.write(Math.round(265000 + service() + iron() + activity() + nps()).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " Ft (brutto)");
 
-// Show, that the given values are in gross.
 // Make inputs instead of prompts.
 // CZK to HUF converter.
 // Gross to net converter.
