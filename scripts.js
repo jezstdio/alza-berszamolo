@@ -40,9 +40,10 @@ function nps() {
     return (Math.round((currentScore - targetScore) * 100) * variable) + gross;
 }
 
-document.write(Math.round(265000 + service() + iron() + activity() + nps()));
+document.write(Math.round(265000 + service() + iron() + activity() + nps()) + " Ft");
 
 // break points for the gross salary. (300000 -> 300.000)
 // Show, that the given values are in gross.
-// Show the currency.
 // Make inputs instead of prompts.
+// CZK to HUF converter.
+// Gross to net converter.
