@@ -12,18 +12,30 @@ function limitMaxScore(currentScore, maxScore) {
     return currentScore;
 }
 
+function showGross() {
+    const sum = document.getElementById("sum");
+    
+    sum.innerHTML = Math.round(defaultGross + service() + iron() + activity() + nps()).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " Ft (brutto)";
+}
+
+function czkToHuf(czk) {
+    const variable = 15;
+
+    return czk * variable;
+}
+
 function service() {
     const value = serviceInput.value;
     const variable = 13.5;
 
-    return value / 100 * variable;
+    return czkToHuf(value / 100 * variable);
 }
 
 function iron() {
     const value = ironInput.value;
     const variable = 3.2;
 
-    return value / 100 * variable;
+    return czkToHuf(value / 100 * variable);
 }
 
 function activity() {
@@ -46,16 +58,9 @@ function nps() {
     return (Math.round((currentScore - targetScore) * 100) * variable) + gross;
 }
 
-function showGross() {
-    const sum = document.getElementById("sum");
-    
-    sum.innerHTML = Math.round(defaultGross + service() + iron() + activity() + nps()).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " Ft (brutto)";
-}
-
 serviceInput.onkeyup = showGross;
 ironInput.onkeyup = showGross;
 activityInput.onkeyup = showGross;
 npsInput.onkeyup = showGross;
 
-// CZK to HUF converter.
 // Gross to net converter.
