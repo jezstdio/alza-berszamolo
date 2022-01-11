@@ -1,9 +1,18 @@
+label, input {
+  max-width: 240px;
+  width: 100%;
+}
+
 input {
   background-color: #E3E3E3;
   border-radius: 32px;
   height: 48px;
-  max-width: 240px;
-  width: 100%;
+  -webkit-transition: background 250ms ease-in-out;
+  transition: background 250ms ease-in-out;
+}
+
+input:focus {
+  background-color: #cfcfcf;
 }
 
 .background-color-white {
