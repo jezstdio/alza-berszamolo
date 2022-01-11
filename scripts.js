@@ -63,4 +63,9 @@ ironInput.onkeyup = showGross;
 activityInput.onkeyup = showGross;
 npsInput.onkeyup = showGross;
 
+serviceInput.onfocus = e => e.currentTarget.select();
+ironInput.onfocus = e => e.currentTarget.select();
+activityInput.onfocus = e => e.currentTarget.select();
+npsInput.onfocus = e => e.currentTarget.select();
+
 // Gross to net converter.
