@@ -19,6 +19,18 @@
 </head>
 <body class="flex center-start column padding-t-64 padding-b-128--m padding-x-24">
     <div class="flex column center-start text-center max-width width-100">
+        <div class="flex center-start column margin-b-32 width-100">
+            <label class="block margin-b-8">
+                Alapbér (brutto)
+                <select id="base_salary--select" class="block width-100 margin-t-4">
+                    <option value="265000">Junior</option>
+                    <option value="290000">Standard</option>
+                    <option value="335000">Senior</option>
+                    <option value="personal">Egyéni</option>
+                </select>
+            </label>
+            <input class="none text-center" id="base_salary--input" type="text" pattern="[0-9]*" inputmode="numeric">
+        </div>
         <label class="margin-b-32">
             Szolgáltatás (czk)
             <input class="text-center margin-t-4" id="service" type="text" pattern="[0-9]*" inputmode="numeric">

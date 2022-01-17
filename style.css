@@ -32,4 +32,8 @@ input:focus {
     padding-bottom: 128px !important;
   }
 }
-/*# sourceMappingURL=style.css.map */
+
+select {
+  font-size: 16px;
+  line-height: 24px;
+}
