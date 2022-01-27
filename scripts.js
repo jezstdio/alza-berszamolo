@@ -52,7 +52,7 @@ function activity() {
     const variable = 39;
     let currentScore = limitMaxScore(inputCheck(activityInput.value), maxScore);
 
-    return ((currentScore - targetScore) * variable) + gross;
+    return ((currentScore - targetScore) * variable) + (currentScore < targetScore ? 0 : gross);
 }
 
 function nps() {
@@ -62,7 +62,7 @@ function nps() {
     const variable = 100;
     let currentScore = limitMaxScore(npsInput.value.replace(",", "."), maxScore);
 
-    return (Math.round((currentScore - targetScore) * 100) * variable) + gross;
+    return (Math.round((currentScore - targetScore) * 100) * variable) + (currentScore < targetScore ? 0 : gross);
 }
 
 serviceInput.onkeyup = showGross;
