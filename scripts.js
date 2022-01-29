@@ -2,6 +2,8 @@ const serviceInput = document.getElementById("service");
 const ironInput = document.getElementById("iron");
 const activityInput = document.getElementById("activity");
 const npsInput = document.getElementById("nps");
+const cctInput = document.getElementById("cct");
+const callInput = document.getElementById("call");
 const baseSalarySelect = document.getElementById("base_salary--select");
 const baseSalaryInput = document.getElementById("base_salary--input");
 let defaultGross = 265000;
@@ -21,8 +23,7 @@ function limitMaxScore(currentScore, maxScore) {
 function showGross() {
     const sum = document.getElementById("sum");
     
-    sum.innerHTML = Math.round(defaultGross + service() + iron() + activity() + nps()).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " Ft";
-    console.log(defaultGross, service(), iron(), activity(), nps());
+    sum.innerHTML = Math.round(defaultGross + service() + iron() + activity() + nps() + cctcall(cctInput) + cctcall(callInput)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " Ft";
 }
 
 function czkToHuf(czk) {
@@ -65,10 +66,18 @@ function nps() {
     return (Math.round((currentScore - targetScore) * 100) * variable) + (currentScore < targetScore ? 0 : gross);
 }
 
+function cctcall(input) {
+    const gross = 65;
+
+    return inputCheck(input.value) * gross;
+}
+
 serviceInput.onkeyup = showGross;
 ironInput.onkeyup = showGross;
 activityInput.onkeyup = showGross;
 npsInput.onkeyup = showGross;
+cctInput.onkeyup = showGross;
+callInput.onkeyup = showGross;
 baseSalaryInput.onkeyup = e => {
     defaultGross = inputCheck(e.currentTarget.value);
     showGross(e);
@@ -79,6 +88,8 @@ ironInput.onfocus = e => e.currentTarget.select();
 activityInput.onfocus = e => e.currentTarget.select();
 npsInput.onfocus = e => e.currentTarget.select();
 baseSalaryInput.onfocus = e => e.currentTarget.select();
+cctInput.onfocus = e => e.currentTarget.select();
+callInput.onfocus = e => e.currentTarget.select();
 
 baseSalarySelect.onchange = e => {
     if (e.currentTarget.value === "personal") {
@@ -95,5 +106,7 @@ baseSalarySelect.onchange = e => {
 
     showGross(e);
 }
+
+showGross();
 
 // Gross to net converter.
