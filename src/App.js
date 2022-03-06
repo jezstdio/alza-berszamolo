@@ -110,10 +110,10 @@ function App() {
           </label>
         </div>
         <div className="group flex column margin-b-32">
-          <span className="font-weight-bold margin-b-8">Munkaidő</span>
+          <span className="font-weight-bold margin-b-8">Munkaidő (óra)</span>
           <div className="flex row">
             <label className="margin-r-8">
-              Terv (óra)
+              Tervezett
               <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="161"
                 value={workTime.plan}
                 onFocus={e => e.currentTarget.select()}
@@ -121,7 +121,7 @@ function App() {
               />
             </label>
             <label className="margin-l-8">
-              Elért (óra)
+              Ledolgozott
               <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="161"
                 value={workTime.current}
                 onFocus={e => e.currentTarget.select()}
