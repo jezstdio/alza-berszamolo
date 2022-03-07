@@ -104,7 +104,12 @@ function App() {
             <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="265000"
               value={baseSalary}
               onFocus={e => e.currentTarget.select()}
-              onChange={e => { setBaseSalary(e.currentTarget.value); localStorage.setItem("baseSalary", e.currentTarget.value) }}
+              onChange={e => {
+                const value = e.currentTarget.value.replace(/\D/g, "");
+                
+                setBaseSalary(value);
+                localStorage.setItem("baseSalary", value)
+              }}
             />
           </label>
         </div>
@@ -116,7 +121,12 @@ function App() {
               <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="161"
                 value={workTime.plan}
                 onFocus={e => e.currentTarget.select()}
-                onChange={e => { setWorkTime({ ...workTime, plan: e.currentTarget.value}); localStorage.setItem("workTimePlan", e.currentTarget.value) }}
+                onChange={e => {
+                  const value = e.currentTarget.value.replace(/\D/g, "");
+                  
+                  setWorkTime({ ...workTime, plan: value});
+                  localStorage.setItem("workTimePlan", value)
+                }}
               />
             </label>
             <label className="margin-l-8">
@@ -124,7 +134,12 @@ function App() {
               <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="161"
                 value={workTime.current}
                 onFocus={e => e.currentTarget.select()}
-                onChange={e => { setWorkTime({ ...workTime, current: e.currentTarget.value}); localStorage.setItem("workTimeCurrent", e.currentTarget.value)}}
+                onChange={e => {
+                  const value = e.currentTarget.value.replace(/\D/g, "");
+
+                  setWorkTime({ ...workTime, current: value});
+                  localStorage.setItem("workTimeCurrent", value)
+                }}
               />
             </label>
           </div>
@@ -137,7 +152,12 @@ function App() {
               <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="507500"
                 value={service.plan}
                 onFocus={e => e.currentTarget.select()}
-                onChange={e => { setService({ ...service, plan: e.currentTarget.value}); localStorage.setItem("servicePlan", e.currentTarget.value) }}
+                onChange={e => {
+                  const value = e.currentTarget.value.replace(/\D/g, "");
+
+                  setService({ ...service, plan: value});
+                  localStorage.setItem("servicePlan", value)
+                }}
               />
             </label>
             <label className="margin-l-8">
@@ -145,7 +165,12 @@ function App() {
               <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="34000"
                 value={service.current}
                 onFocus={e => e.currentTarget.select()}
-                onChange={e => { setService({ ...service, current: e.currentTarget.value}); localStorage.setItem("serviceCurrent", e.currentTarget.value)}}
+                onChange={e => {
+                  const value = e.currentTarget.value.replace(/\D/g, "");
+                  
+                  setService({ ...service, current: value});
+                  localStorage.setItem("serviceCurrent", value)
+                }}
               />
             </label>
           </div>
@@ -158,7 +183,12 @@ function App() {
               <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="1450000"
                 value={iron.plan}
                 onFocus={e => e.currentTarget.select()}
-                onChange={e => { setIron({ ...iron, plan: e.currentTarget.value}); localStorage.setItem("ironPlan", e.currentTarget.value)}}
+                onChange={e => {
+                  const value = e.currentTarget.value.replace(/\D/g, "");
+                  
+                  setIron({ ...iron, plan: value});
+                  localStorage.setItem("ironPlan", value)
+                }}
               />
             </label>
             <label className="margin-l-8">
@@ -166,7 +196,12 @@ function App() {
               <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="110000"
                 value={iron.current}
                 onFocus={e => e.currentTarget.select()}
-                onChange={e => { setIron({ ...iron, current: e.currentTarget.value}); localStorage.setItem("ironCurrent", e.currentTarget.value)}}
+                onChange={e => {
+                  const value = e.currentTarget.value.replace(/\D/g, "");
+                  
+                  setIron({ ...iron, current: value});
+                  localStorage.setItem("ironCurrent", value)
+                }}
               />
             </label>
           </div>
@@ -177,7 +212,12 @@ function App() {
             <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="960"
               value={activity}
               onFocus={e => e.currentTarget.select()}
-              onChange={e => { setActivity(e.currentTarget.value); localStorage.setItem("activity", e.currentTarget.value)}}
+              onChange={e => {
+                const value = e.currentTarget.value.replace(/\D/g, "");
+
+                setActivity(value);
+                localStorage.setItem("activity", value)
+              }}
             />
           </label>
           <label className="margin-l-8">
@@ -185,7 +225,12 @@ function App() {
             <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="decimal" placeholder="4.71"
               value={nps}
               onFocus={e => e.currentTarget.select()}
-              onChange={e => { setNps(e.currentTarget.value); localStorage.setItem("nps", e.currentTarget.value)}}
+              onChange={e => {
+                const value = e.currentTarget.value.replace(/[^0-9.,]/g, "");
+
+                setNps(value);
+                localStorage.setItem("nps", value)
+              }}
             />
           </label>
         </div>
@@ -195,7 +240,12 @@ function App() {
             <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="0"
               value={cct}
               onFocus={e => e.currentTarget.select()}
-              onChange={e => { setCct(e.currentTarget.value); localStorage.setItem("cct", e.currentTarget.value)}}
+              onChange={e => {
+                const value = e.currentTarget.value.replace(/\D/g, "");
+
+                setCct(value);
+                localStorage.setItem("cct", value)
+              }}
             />
           </label>
           <label className="margin-l-8">
@@ -203,7 +253,12 @@ function App() {
             <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="0"
               value={call}
               onFocus={e => e.currentTarget.select()}
-              onChange={e => { setCall(e.currentTarget.value); localStorage.setItem("call", e.currentTarget.value)}}
+              onChange={e => {
+                const value = e.currentTarget.value.replace(/\D/g, "");
+
+                setCall(value);
+                localStorage.setItem("call", value)
+              }}
             />
           </label>
         </div>
