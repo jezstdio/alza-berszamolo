@@ -266,19 +266,19 @@ function App() {
       <div className="flex row column--d wrap center sticky top-0 padding-y-32 text-center">
         <div className="width-50--m margin-b-24">
           <span className="block">Bruttó</span>
-          <span className="block font-size-24 font-weight-bold">{ result.gross } Ft</span>
+          <span className="block font-size-24 font-weight-bold">{ result.gross || '-' } Ft</span>
         </div>
         <div className="width-50--m margin-b-24">
           <span className="block">SZJA</span>
-          <span className="block font-size-24 font-weight-bold">{ result.szja } Ft</span>
+          <span className="block font-size-24 font-weight-bold">{ result.szja || '-' } Ft</span>
         </div>
         <div className="width-50--m margin-b-24">
           <span className="block">Nettó</span>
-          <span className="block font-size-24 font-weight-bold">{ result.net } Ft</span>
+          <span className="block font-size-24 font-weight-bold">{ result.net || '-' } Ft</span>
         </div>
         <div className="width-50--m margin-b-24">
           <span className="block">Nettó + SZJA</span>
-          <span className="block font-size-24 font-weight-bold">{ result.netszja } Ft</span>
+          <span className="block font-size-24 font-weight-bold">{ result.netszja || '-' } Ft</span>
         </div>
       </div>
     </div>
