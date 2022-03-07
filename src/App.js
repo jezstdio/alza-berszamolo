@@ -90,7 +90,7 @@ function App() {
   }
 
   function formNumber(number) {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '-';
   }
 
   useEffect(salaryCalc, [
@@ -100,7 +100,7 @@ function App() {
   useEffect(salaryCalc, []);
 
   return (
-    <div className="flex column row--d center padding-x-24 padding-y-64 text-center">
+    <div className="flex column row--d start-center padding-x-24 padding-y-64 text-center">
       <div className="margin-r-64--d">
         <div className="flex row margin-b-32">
           <label className="margin-b-8">
@@ -270,19 +270,19 @@ function App() {
       <div className="flex row column--d wrap center sticky top-0 padding-y-32 text-center">
         <div className="width-50--m margin-b-24">
           <span className="block">Bruttó</span>
-          <span className="block font-size-24 font-weight-bold">{ formNumber(result.gross) || '-' } Ft</span>
+          <span className="block font-size-24 font-weight-bold">{ formNumber(result.gross) } Ft</span>
         </div>
         <div className="width-50--m margin-b-24">
           <span className="block">SZJA</span>
-          <span className="block font-size-24 font-weight-bold">{ formNumber(result.szja) || '-' } Ft</span>
+          <span className="block font-size-24 font-weight-bold">{ formNumber(result.szja) } Ft</span>
         </div>
         <div className="width-50--m margin-b-24">
           <span className="block">Nettó</span>
-          <span className="block font-size-24 font-weight-bold">{ formNumber(result.net) || '-' } Ft</span>
+          <span className="block font-size-24 font-weight-bold">{ formNumber(result.net) } Ft</span>
         </div>
         <div className="width-50--m margin-b-24">
           <span className="block">Nettó + SZJA</span>
-          <span className="block font-size-24 font-weight-bold">{ formNumber(result.netszja) || '-' } Ft</span>
+          <span className="block font-size-24 font-weight-bold">{ formNumber(result.netszja) } Ft</span>
         </div>
       </div>
     </div>
