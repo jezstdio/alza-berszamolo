@@ -49,23 +49,22 @@ function App() {
     const sales = (salesCurrentCalc(iron) * salesCurrentCalc(service)) * 100;
     const total = sales + npsCalc();
 
-    console.log(sales, total);
-
     return (sales > 136 ? 136 + npsCalc() : total < 70 ? 70 : total) / 100;
   }
 
   function npsCalc() {
+    const npsNew = nps.replace(",", ".");
     let value = 0;
 
-    if (nps <= 4.68 ) {
+    if (npsNew <= 4.68 ) {
         value = -4;
-    } else if (nps == 4.69) {
+    } else if (npsNew == 4.69) {
         value = -2;
-    } else if (nps == 4.7) {
+    } else if (npsNew == 4.7) {
         value = 0;
-    } else if (nps == 4.71 || nps == 4.72) {
+    } else if (npsNew == 4.71 || npsNew == 4.72) {
         value = 2;
-    } else if (nps > 4.72) {
+    } else if (npsNew > 4.72) {
         value = 4;
     } else {
         value = 0;
