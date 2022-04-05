@@ -7,12 +7,12 @@ function App() {
   const [iron, setIron] = useState({
     plan: localStorage.getItem("ironPlan") || '',
     current: localStorage.getItem("ironCurrent") || '',
-    percentage: 6
+    percentage: 3.2
   });
   const [service, setService] = useState({
     plan: localStorage.getItem("servicePlan") || '',
     current: localStorage.getItem("serviceCurrent") || '',
-    percentage: 14
+    percentage: 13.5
   });
   const [workTime, setWorkTime] = useState({
     plan: localStorage.getItem('workTimePlan') || '',
@@ -48,8 +48,10 @@ function App() {
   function coefficientCalc() {
     const sales = (salesCurrentCalc(iron) * salesCurrentCalc(service)) * 100;
     const total = sales + npsCalc();
+    const minimumPercentage = 70;
+    const maximumPercentage = 136;
 
-    return (sales > 136 ? 136 + npsCalc() : total < 70 ? 70 : total) / 100;
+    return (sales > maximumPercentage ? maximumPercentage + npsCalc() : total < minimumPercentage ? minimumPercentage : total) / 100;
   }
 
   function npsCalc() {
