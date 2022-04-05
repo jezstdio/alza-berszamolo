@@ -32,7 +32,7 @@ function App() {
   const czkValue = 13;
   const czkToHuf = czk => czk * czkValue;
   const hufToCzk = huf => huf / czkValue;
-  const salesCurrentCalc = sales => (sales.current / hufToCzk(sales.plan * workTimeCalc())).toFixed(2);
+  const salesCurrentCalc = sales => (sales.current / sales.plan * workTimeCalc()).toFixed(2);
   const salesPercentageCalc = sales => (sales.current * sales.percentage) / 100;
 
   const cctCall = current => current * 65;
@@ -154,7 +154,7 @@ function App() {
           <span className="font-weight-bold margin-b-8">Szolgáltatás</span>
           <div className="flex row">
             <label className="margin-r-8">
-              Terv (huf)
+              Terv (czk)
               <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="507500"
                 value={service.plan}
                 onFocus={e => e.currentTarget.select()}
@@ -185,7 +185,7 @@ function App() {
           <span className="font-weight-bold margin-b-8">Vas</span>
           <div className="flex row">
             <label className="margin-r-8">
-              Terv (huf)
+              Terv (czk)
               <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="1450000"
                 value={iron.plan}
                 onFocus={e => e.currentTarget.select()}
