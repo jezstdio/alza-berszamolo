@@ -29,7 +29,7 @@ function App() {
     netszja: localStorage.getItem("netszja") || 0
   });
 
-  const czkValue = 13;
+  const czkValue = 14.5;
   const czkToHuf = czk => czk * czkValue;
   const hufToCzk = huf => huf / czkValue;
   const salesCurrentCalc = sales => (sales.current / sales.plan * workTimeCalc()).toFixed(2);
