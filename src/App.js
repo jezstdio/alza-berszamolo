@@ -1,4 +1,4 @@
-// ((14% szolgáltatás jutalék + 6% vas jutalék ) * (vas teljesítés % * szolgáltatás teljesítés % + NPS teljesítés %) ) – aktivity = mozgóbér 
+//Mozgóbér = (Asszisztált szolgáltatás * 13,5% + Asszisztált vas * 3,2%) * marzsin/óra terv teljesítése
 
 import React, { useEffect, useState } from "react";
 
@@ -14,66 +14,18 @@ function App() {
     current: localStorage.getItem("serviceCurrent") || '',
     percentage: 13.5
   });
-  const [workTime, setWorkTime] = useState({
-    plan: localStorage.getItem('workTimePlan') || '',
-    current: localStorage.getItem('workTimeCurrent') || ''
-  });
-  const [activity, setActivity] = useState(localStorage.getItem("activity") || '');
-  const [nps, setNps] = useState(localStorage.getItem("nps") || '');
-  const [cct, setCct] = useState(localStorage.getItem("cct") || '');
-  const [call, setCall] = useState(localStorage.getItem("call") || '');
   const [result, setResult] = useState({
     gross: localStorage.getItem("gross") || 0,
     szja: localStorage.getItem("szja") || 0,
     net: localStorage.getItem("net") || 0,
     netszja: localStorage.getItem("netszja") || 0
   });
+  const [marginPerHour, setMarginPerHour] = useState(localStorage.getItem("marginPerHour") || '')
 
   const czkValue = 14.5;
   const czkToHuf = czk => czk * czkValue;
   const hufToCzk = huf => huf / czkValue;
-  const salesCurrentCalc = sales => (sales.current / sales.plan * workTimeCalc()).toFixed(2);
   const salesPercentageCalc = sales => (sales.current * sales.percentage) / 100;
-
-  const cctCall = current => current * 65;
-  const workTimeCalc = () => (workTime.current / workTime.plan).toFixed(2);
-
-  function activityCalc() {
-    const plan = 960;
-    const penalty = 39;
-
-    return activity < plan ? (plan - activity) * penalty : 0;
-  }
-
-  function coefficientCalc() {
-    const sales = (salesCurrentCalc(iron) * salesCurrentCalc(service)) * 100;
-    const total = sales + npsCalc();
-    const minimumPercentage = 70;
-    const maximumPercentage = 136;
-
-    return (sales > maximumPercentage ? maximumPercentage + npsCalc() : total < minimumPercentage ? minimumPercentage : total) / 100;
-  }
-
-  function npsCalc() {
-    const npsNew = nps.replace(",", ".");
-    let value = 0;
-
-    if (npsNew <= 4.68 ) {
-        value = -4;
-    } else if (npsNew == 4.69) {
-        value = -2;
-    } else if (npsNew == 4.7) {
-        value = 0;
-    } else if (npsNew == 4.71 || npsNew == 4.72) {
-        value = 2;
-    } else if (npsNew > 4.72) {
-        value = 4;
-    } else {
-        value = 0;
-    }
-
-    return value;
-  }
 
   function salaryCalc() {
     const net = parseInt(result.gross * (100 - 33.5) / 100);
@@ -83,8 +35,7 @@ function App() {
       ...result,
       gross: (
         parseInt(baseSalary)
-          + parseInt(czkToHuf(salesPercentageCalc(service) + salesPercentageCalc(iron)) * coefficientCalc())
-        ) - activityCalc() + cctCall(cct) + cctCall(call),
+          + parseInt(czkToHuf(salesPercentageCalc(service) + salesPercentageCalc(iron)) * marginPerHour)),
         net: net,
         szja: szja,
         netszja: net + szja
@@ -96,7 +47,7 @@ function App() {
   }
 
   useEffect(salaryCalc, [
-    baseSalary, workTime, iron, service, activity, nps, call, cct,
+    baseSalary, workTime, iron, service,
     result.gross, result.szja, result.net, result.netszja
   ]);
   useEffect(salaryCalc, []);
