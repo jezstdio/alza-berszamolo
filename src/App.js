@@ -239,41 +239,40 @@ function App() {
           </section>
           <section className="margin-b-40--m">
             <h2 className="font-size-16 margin-b-8">Opciók</h2>
-            <label className="inline-flex center-start padding-y-8 cursor-pointer">
-              <input type="checkbox"
-                checked={isShCompleted}
-                onChange={e => setIsShCompleted(!isShCompleted)}
-              />
-              <div className="checkbox"></div>
-              <span>S/h teljesítve</span>
-            </label>
-            <br/>
-            <label className="inline-flex center-start padding-y-8 cursor-pointer">
-              <input type="checkbox"
-                checked={isSenior}
-                onChange={e => setIsSenior(!isSenior)}
-              />
-              <div className="checkbox"></div>
-              <span>Senior vagyok</span>
-            </label>
-            <br/>
-            <label className="inline-flex center-start padding-y-8 cursor-pointer">
-              <input type="checkbox"
-                checked={isUnder25}
-                onChange={e => setIsUnder25(!isUnder25)}
-              />
-              <div className="checkbox"></div>
-              <span>25 év alatti vagyok</span>
-            </label>
-            <br/>
-            <label className="inline-flex center-start padding-y-8 cursor-pointer">
-              <input type="checkbox"
-                checked={isCalling}
-                onChange={e => setIsCalling(!isCalling)}
-              />
-              <div className="checkbox"></div>
-              <span>Callozok</span>
-            </label>
+            <div className="inline-flex column">
+              <label className="flex center-start padding-y-8 cursor-pointer">
+                <input type="checkbox"
+                  checked={isShCompleted}
+                  onChange={e => setIsShCompleted(prev => !prev)}
+                />
+                <div className="checkbox"></div>
+                <span>S/h teljesítve</span>
+              </label>
+              <label className="flex center-start padding-y-8 cursor-pointer">
+                <input type="checkbox"
+                  checked={isSenior}
+                  onChange={e => setIsSenior(prev => !prev)}
+                />
+                <div className="checkbox"></div>
+                <span>Senior vagyok</span>
+              </label>
+              <label className="flex center-start padding-y-8 cursor-pointer">
+                <input type="checkbox"
+                  checked={isUnder25}
+                  onChange={e => setIsUnder25(prev => !prev)}
+                />
+                <div className="checkbox"></div>
+                <span>25 év alatti vagyok</span>
+              </label>
+              <label className="flex center-start padding-y-8 cursor-pointer">
+                <input type="checkbox"
+                  checked={isCalling}
+                  onChange={e => setIsCalling(prev => !prev)}
+                />
+                <div className="checkbox"></div>
+                <span>Callozok</span>
+              </label>
+            </div>
           </section>
         </div>
         <section className="summary width-100 width-text margin-t-192--d">
