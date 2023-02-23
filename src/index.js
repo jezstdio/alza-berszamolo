@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './8px-grid.min.css';
+import '8px-css-grid';
 import './style.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';

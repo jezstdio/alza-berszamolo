@@ -1,186 +1,340 @@
-//Mozgóbér = (Asszisztált szolgáltatás * 13,5% + Asszisztált vas * 3,2%) * marzsin/óra terv teljesítése
+// SA:
+// Szolgáltatás: 11.25%
+// Vas: 2.67%
+// Kasszához pluszban:
+// 82HUF / db
+
+// Call
+// Szolgáltatás: 10%
+// Vas: 2%
+
+// Képlet: (szolgáltatás + vas) * m/h * s/h
+
+// m/h:
+// < 70% = 0
+// >= 120% = 1.2
+
+// s/h:
+// < 100% = 0.7
+// >= 100% = 1.2
 
 import React, { useEffect, useState } from "react";
 
 function App() {
-  const [baseSalary, setBaseSalary] = useState(localStorage.getItem("baseSalary") || '');
+  const [baseSalary, setBaseSalary] = useState({
+    standard: 385000,
+    senior: 410000
+  });
+  const [overtimeHours, setOvertimeHours] = useState(parseInt(localStorage.getItem("overtimeHours")) || 0);
+  const [travel, setTravel] = useState(14400);
+  const [isSenior, setIsSenior] = useState(localStorage.getItem("isSenior") === "true");
+  const [isShCompleted, setIsShCompleted] = useState(localStorage.getItem("isShCompleted") === "true");
+  const [isUnder25, setIsUnder25] = useState(localStorage.getItem("isUnder25") === "true");
+  const [isCalling, setIsCalling] = useState(localStorage.getItem("isCalling") === "true");
+
+  const [marginPerHour, setMarginPerHour] = useState(parseInt(localStorage.getItem("marginPerHour")) || 0);
+
   const [iron, setIron] = useState({
-    current: localStorage.getItem("ironCurrent") || '',
-    percentage: 3.2
-  });
-  const [service, setService] = useState({
-    current: localStorage.getItem("serviceCurrent") || '',
-    percentage: 13.5
-  });
-  const [result, setResult] = useState({
-    gross: localStorage.getItem("gross") || 0,
-    szja: localStorage.getItem("szja") || 0,
-    net: localStorage.getItem("net") || 0,
-    netszja: localStorage.getItem("netszja") || 0
-  });
-  const [margin, setMargin] = useState({
-    plan: localStorage.getItem("marginPlan") || '',
-    current: localStorage.getItem("marginCurrent") || '',
-    percentage: localStorage.getItem("marginPercentage") || ''
+    curr: parseInt(localStorage.getItem("ironCurrent")) || 0,
+    pos: {
+      ss: 2.67, // Sales Specialist
+      call: 2.6 // Call Specialist
+    }
   });
 
-  const czkValue = 14.5;
+  const [service, setService] = useState({
+    curr: parseInt(localStorage.getItem("serviceCurrent")) || 0,
+    pos: {
+      ss: 11.25 , // Sales Specialist
+      call: 9 // Call Specialist
+    }
+  });
+
+  const [result, setResult] = useState({});
+
+  const czkValue = 16.5;
   const czkToHuf = czk => czk * czkValue;
-  const salesPercentageCalc = sales => {
-    if (marginPercentage() < 70) {
-      return (sales.current / 2) * sales.percentage / 100
+
+  const calcIronAndService = (servicePercent, ironPercent) => {
+    function calcPercentage(current, percent) {
+      return current * (percent / 100);
     }
 
-    return sales.current * sales.percentage / 100
+    const ironCalc = calcPercentage(iron.curr, ironPercent);
+    const serviceCalc = calcPercentage(service.curr, servicePercent);
+    
+    return parseInt(ironCalc + serviceCalc);
   };
 
-  function marginPercentageCheck(percentage) {
-    if (percentage > 120) {
-      return percentage = 120
-    } else if (percentage < 70) {
-      return percentage = 70
-    }
+  function calcMarginPerHour() {
+    const curr = marginPerHour / 100;
+    // minimum and maximum requirements
+    const req = {
+      min: 0.7,
+      max: 1.2
+    };
 
-    return percentage;
+    // minimum and maximum multiplier
+    const mult = {
+      min: 0,
+      max: 1.2
+    };
+
+    // m/h < 70% = 0
+    if (curr < req.min ) { return mult.min; }
+
+    // m/h is between 70 and 120 percent = 0
+    if (curr >= req.min && curr < req.max) { return curr; }
+
+    // m/h >= 120% = 1.2
+    if (curr >= req.max) { return mult.max; }
   }
 
-  function marginPercentage() {
-    const percentage = Math.floor(margin.current / margin.plan * 100);
+  function calcSZJA(number) {
+    const maxSZJA = 74993;
 
-    margin.percentage = percentage;
+    return number > maxSZJA ? maxSZJA : number;
+  }
 
-    localStorage.setItem("marginPercentage", percentage);
+  function calcNet(gross) {
+    return parseInt(gross * (100 - 33.5) / 100)
+  }
 
-    return percentage;
+  function calcOvertime(base, hour = 0) {
+    return parseInt((base / 168 * 1.5) * hour) || 0;
   }
 
   function salaryCalc() {
-    const net = parseInt(result.gross * (100 - 33.5) / 100);
-    const szja = parseInt(result.gross * 15 / 100);
+    const base = !isSenior ? baseSalary["standard"] : baseSalary["senior"];
+    const ironAndService = !isCalling ? calcIronAndService(service.pos.ss, iron.pos.ss) : calcIronAndService(service.pos.call, iron.pos.call);
+    const mh = calcMarginPerHour();
+    const sh = isShCompleted ? 1.2 : 0.7;
+    const commission = parseInt(czkToHuf(ironAndService) * mh * sh);
+    const overtime = calcOvertime(base, overtimeHours);
+    const szja = calcSZJA(parseInt((base + travel + commission) * 15 / 100));
+    const sum = base + travel + commission + overtime; 
+    const sumGross = sum + (isUnder25 ? szja : 0);
 
     setResult({
-      ...result,
-      gross: (
-        parseInt(baseSalary)
-          + parseInt(czkToHuf((salesPercentageCalc(service) + salesPercentageCalc(iron)) * (marginPercentageCheck(marginPercentage()) / 100)))),
-        net: net,
-        szja: szja,
-        netszja: net + szja
+      base,
+      commission,
+      travel,
+      szja,
+      sumGross,
+      overtime,
+      sumNet: calcNet(sumGross)
     });
+
+    localStorage.setItem("overtimeHours", overtimeHours);
+    localStorage.setItem("marginPerHour", marginPerHour);
+    localStorage.setItem("isSenior", isSenior);
+    localStorage.setItem("isCalling", isCalling);
+    localStorage.setItem("isShCompleted", isShCompleted);
+    localStorage.setItem("isUnder25", isUnder25);
+    localStorage.setItem("ironCurrent", iron.curr);
+    localStorage.setItem("serviceCurrent", service.curr);
   }
 
-  function formNumber(number) {
-    return number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '-';
+  function formatNumber(number) {
+    return number ? number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") : '';
   }
 
-  useEffect(salaryCalc, [
-    baseSalary, iron, service, margin,
-    result.gross, result.szja, result.net, result.netszja
-  ]);
+  function clearNumber(number) {
+    return parseInt(number.toString().replace(/[%,. Kčóra]/gi, ""));
+  }
+
+  function clearFloat(number) {
+    return parseFloat(number.toString().replace(/[% Kčóra]/gi, ""));
+  }
+
+  function removeNumber(number) {
+    return parseInt(clearNumber(number).toString().replace(/\d$/, ""));
+  }
+
+  function moveCursorToTheEnd(e) {
+    const lastChar = e.target.value.length;
+
+    e.target.setSelectionRange(lastChar, lastChar);
+    e.target.focus();
+  }
+
+  useEffect(salaryCalc, [ baseSalary, marginPerHour, overtimeHours, isCalling, isSenior, isShCompleted, isUnder25, iron.curr, service.curr ]);
   useEffect(salaryCalc, []);
 
   return (
-    <div className="flex column row--d start-center padding-x-24 padding-y-64 text-center">
-      <div className="margin-r-64--d">
-        <div className="flex row margin-b-32">
-          <label className="margin-b-8">
-            Alapbér (bruttó huf)
-            <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="265000"
-              value={baseSalary}
-              onFocus={e => e.currentTarget.select()}
-              onChange={e => {
-                const value = e.currentTarget.value.replace(/\D/g, "");
-                
-                setBaseSalary(value);
-                localStorage.setItem("baseSalary", value)
-              }}
-            />
-          </label>
-        </div>
-        <div className="flex column margin-b-32">
-          <div className="flex row">
-            <label className="margin-l-8">
-              Szolgáltatás (elért, czk)
-              <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="34000"
-                value={service.current}
-                onFocus={e => e.currentTarget.select()}
+    <div className="padding-24 flex--d column--d center-between--d height-min-100vh--d">
+      <div className="flex column start-center--d row--d width-100">
+        <div className="width-100 width-text margin-r-56--d">
+          <h1 className="font-size-48 margin-b-40">Alza <br />Bérszámoló</h1>
+          <section className="margin-b-24">
+            <h2 className="font-size-16 margin-b-16">Alapok</h2>
+            <label className="relative margin-b-8 flex cursor-text">
+              <input type="text" pattern="[0-9]*" inputMode="numeric" placeholder="0 Kč"
+                value={`${formatNumber(service.curr)}${clearNumber(service.curr) ? ' Kč' : ''}`}
+                onClick={moveCursorToTheEnd}
                 onChange={e => {
-                  const value = e.currentTarget.value.replace(/\D/g, "");
-                  
-                  setService({ ...service, current: value});
-                  localStorage.setItem("serviceCurrent", value)
+                  if (e.nativeEvent.inputType === "deleteContentBackward") {
+                    setService({
+                      ...service,
+                      curr: removeNumber(e.target.value)
+                    })
+                  } else {
+                    setService({
+                      ...service,
+                      curr: clearNumber(e.target.value)
+                    })
+                  }
                 }}
               />
+              <span>Szolgáltatás</span>
             </label>
+            <label className="relative margin-b-8 flex cursor-text">
+              <input type="text" pattern="[0-9]*" inputMode="numeric" placeholder="0 Kč"
+                value={`${formatNumber(iron.curr)}${clearNumber(iron.curr) ? ' Kč' : ''}`}
+                onClick={moveCursorToTheEnd}
+                onChange={e => {
+                  if (e.nativeEvent.inputType === "deleteContentBackward") {
+                    setIron({
+                      ...iron,
+                      curr: removeNumber(e.target.value)
+                    })
+                  } else {
+                    setIron({
+                      ...iron,
+                      curr: clearNumber(e.target.value)
+                    })
+                  }
+                }}
+              />
+              <span>Vas</span>
+            </label>
+            <label className="relative margin-b-8 flex cursor-text">
+              <input type="text" pattern="[0-9]*" inputMode="numeric" placeholder="0 %"
+                value={`${formatNumber(marginPerHour)}${clearFloat(marginPerHour) ? ' %' : ''}`}
+                onClick={moveCursorToTheEnd}
+                onChange={e => {
+                  if (e.nativeEvent.inputType === "deleteContentBackward") {
+                    setMarginPerHour(removeNumber(e.target.value))
+                  } else {
+                    setMarginPerHour(clearFloat(e.target.value))
+                  }
+                }}
+              />
+              <span>M/h</span>
+            </label>
+            <label className="relative margin-b-8 flex cursor-text">
+              <input type="text" pattern="[0-9]*" inputMode="numeric" placeholder="0 óra"
+                value={`${formatNumber(overtimeHours)}${clearNumber(overtimeHours) ? ' óra' : ''}`}
+                onClick={moveCursorToTheEnd}
+                onChange={e => {
+                  if (e.nativeEvent.inputType === "deleteContentBackward") {
+                    setOvertimeHours(removeNumber(e.target.value))
+                  } else {
+                    setOvertimeHours(clearNumber(e.target.value))
+                  }
+                }}
+              />
+              <span>Túlóra</span>
+            </label>
+          </section>
+          <section className="margin-b-40--m">
+            <h2 className="font-size-16 margin-b-8">Opciók</h2>
+            <label className="inline-flex center-start padding-y-8 cursor-pointer">
+              <input type="checkbox"
+                checked={isShCompleted}
+                onChange={e => setIsShCompleted(!isShCompleted)}
+              />
+              <div className="checkbox"></div>
+              <span>S/h teljesítve</span>
+            </label>
+            <br/>
+            <label className="inline-flex center-start padding-y-8 cursor-pointer">
+              <input type="checkbox"
+                checked={isSenior}
+                onChange={e => setIsSenior(!isSenior)}
+              />
+              <div className="checkbox"></div>
+              <span>Senior vagyok</span>
+            </label>
+            <br/>
+            <label className="inline-flex center-start padding-y-8 cursor-pointer">
+              <input type="checkbox"
+                checked={isUnder25}
+                onChange={e => setIsUnder25(!isUnder25)}
+              />
+              <div className="checkbox"></div>
+              <span>25 év alatti vagyok</span>
+            </label>
+            <br/>
+            <label className="inline-flex center-start padding-y-8 cursor-pointer">
+              <input type="checkbox"
+                checked={isCalling}
+                onChange={e => setIsCalling(!isCalling)}
+              />
+              <div className="checkbox"></div>
+              <span>Callozok</span>
+            </label>
+          </section>
+        </div>
+        <section className="summary width-100 width-text margin-t-192--d">
+          <div className="flex justify-between margin-b-8">
+            <span>Alapbér</span>
+            <div className="">
+              <span>{formatNumber(result.base)}</span>
+              <span> Ft</span>
+            </div>
           </div>
-        </div>
-        <div className="flex column margin-b-32">
-          <div className="flex row">
-            <label className="margin-l-8">
-              Vas (elért, czk)
-              <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="110000"
-                value={iron.current}
-                onFocus={e => e.currentTarget.select()}
-                onChange={e => {
-                  const value = e.currentTarget.value.replace(/\D/g, "");
-                  
-                  setIron({ ...iron, current: value});
-                  localStorage.setItem("ironCurrent", value)
-                }}
-              />
-            </label>
+          <div className="flex justify-between margin-b-8">
+            <span>Jutalék</span>
+            <div className="">
+              <span>{formatNumber(result.commission) || 0}</span>
+              <span> Ft</span>
+            </div>
           </div>
-        </div>
-        <div className="group flex column margin-b-32">
-          <span className="font-weight-bold margin-b-8">Margin / óra</span>
-          <div className="flex row">
-            <label className="margin-r-8">
-              Terv (czk)
-              <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="960"
-                value={margin.plan}
-                onFocus={e => e.currentTarget.select()}
-                onChange={e => {
-                  const value = e.currentTarget.value.replace(/\D/g, "");
-                  
-                  setMargin({ ...margin, plan: value});
-                  localStorage.setItem("marginPlan", value)
-                }}
-              />
-            </label>
-            <label className="margin-l-8">
-              Elért (czk)
-              <input className="text-center margin-t-4" type="text" pattern="[0-9]*" inputMode="numeric" placeholder="791"
-                value={margin.current}
-                onFocus={e => e.currentTarget.select()}
-                onChange={e => {
-                  const value = e.currentTarget.value.replace(/\D/g, "");
-                  
-                  setMargin({ ...margin, current: value});
-                  localStorage.setItem("marginCurrent", value)
-                }}
-              />
-            </label>
+          <div className="flex justify-between margin-b-8">
+            <span>Utazási költség</span>
+            <div className="">
+              <span>{formatNumber(result.travel)}</span>
+              <span> Ft</span>
+            </div>
           </div>
-        </div>
+          { overtimeHours ? <div className="flex justify-between margin-b-8">
+            <span>Túlóra</span>
+            <div className="">
+              <span>{formatNumber(result.overtime)}</span>
+              <span> Ft</span>
+            </div>
+          </div> : '' }
+          { isUnder25 ? <div className="flex justify-between">
+            <span>Kedvezményes SZJA</span>
+            <div className="">
+              <span>{formatNumber(result.szja)}</span>
+              <span> Ft</span>
+            </div>
+          </div> : '' }
+          <div className="flex justify-between font-size-16 margin-t-24 margin-b-8">
+            <span>Összesen:</span>
+            <div className="">
+              <span>{formatNumber(result.sumGross)}</span>
+              <span> Ft</span>
+            </div>
+          </div>
+          <div className="flex justify-between color-white font-size-24">
+            <span>Nettó:</span>
+            <div className="">
+              <span>{formatNumber(result.sumNet)}</span>
+              <span> Ft</span>
+            </div>
+          </div>
+        </section>
       </div>
-      <div className="flex row column--d wrap center sticky top-0 padding-y-32 text-center">
-        <div className="width-50--m margin-b-24">
-          <span className="block">Bruttó</span>
-          <span className="block font-size-24 font-weight-bold">{ formNumber(result.gross) } Ft</span>
+      <footer className="width-100 width-content">
+        <div className="margin-b-16">
+          <span className="block">Design by rlndsgn</span>
+          <span className="block">Coded by jezstdio</span>
         </div>
-        <div className="width-50--m margin-b-24">
-          <span className="block">SZJA</span>
-          <span className="block font-size-24 font-weight-bold">{ formNumber(result.szja) } Ft</span>
-        </div>
-        <div className="width-50--m margin-b-24">
-          <span className="block">Nettó</span>
-          <span className="block font-size-24 font-weight-bold">{ formNumber(result.net) } Ft</span>
-        </div>
-        <div className="width-50--m margin-b-24">
-          <span className="block">Nettó + SZJA</span>
-          <span className="block font-size-24 font-weight-bold">{ formNumber(result.netszja) } Ft</span>
-        </div>
-      </div>
+        <span className="block">Copyright © 2023. All rights reserved.</span>
+      </footer>
     </div>
   );
 }
