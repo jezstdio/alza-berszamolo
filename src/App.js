@@ -148,7 +148,7 @@ function App() {
   }
 
   function removeNumber(number) {
-    return parseInt(clearNumber(number).toString().replace(/\d$/, ""));
+    return parseInt(clearNumber(number).toString().replace(/\d$/, "")) || 0;
   }
 
   function moveCursorToTheEnd(e) {
@@ -162,9 +162,9 @@ function App() {
   useEffect(salaryCalc, []);
 
   return (
-    <div className="padding-24 flex--d column--d center-between--d height-min-100vh--d">
+    <div className="padding-24 padding-t-48--d flex--d column--d center-between--d height-min-100vh--d">
       <div className="flex column start-center--d row--d width-100">
-        <div className="width-100 width-text margin-r-56--d">
+        <div className="width-100 width-text--d margin-r-56--d">
           <h1 className="font-size-48 margin-b-40">Alza <br />Bérszámoló</h1>
           <section className="margin-b-24">
             <h2 className="font-size-16 margin-b-16">Alapok</h2>
@@ -275,7 +275,7 @@ function App() {
             </div>
           </section>
         </div>
-        <section className="summary width-100 width-text margin-t-192--d">
+        <section className="summary width-100 width-text--d margin-t-192--d">
           <div className="flex justify-between margin-b-8">
             <span>Alapbér</span>
             <div className="">
