@@ -52,7 +52,7 @@ function App() {
 
   const [result, setResult] = useState({});
 
-  const czkValue = 16.5;
+  const czkValue = 16;
   const czkToHuf = czk => czk * czkValue;
 
   const calcIronAndService = (servicePercent, ironPercent) => {
