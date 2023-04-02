@@ -1,3 +1,5 @@
+Ez a project archiválva lett, mert összevontam a fő alza repositorival.
+
 # Alza bérszámoló
 ## Mit tud?
 - Böngészőbe elmenti az utoljára beállított értékeket.
